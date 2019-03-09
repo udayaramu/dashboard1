@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="Chart.bundle.js"></script>
+    <script src="utils.js"></script>
+    <script src="analyser.js"></script>
+	<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+	</style>
+</head>
+
+<body>
+    <!-- Type of Report: <select onchange="changeChart(this)">
+        <option value="ATM">ATM</option>
+        <option value="Teller SVT">Teller SVT</option>
+        <option value="Digital Login">Mercedes</option>
+        <option value="Call Center">Audi</option>
+    </select>
+     -->
+
+	<!-- <div style="width:75%;">
+		<canvas id="canvas"></canvas>
+    </div> -->
+    <div class="content">
+        <div class="compareHead">
+            Compare with: 
+            <select onchange="changeChart(this)">
+                <option value="None">None</option>
+                <option value="Yesterday">Yesterday</option>
+                <option value="Last Week">Last Week</option>
+                <option value="Last Month">Month</option>
+            </select>
+        </div>
+        <div class="wrapper col-2"><canvas id="chart-0"></canvas></div>
+        <div class="wrapper col-2"><canvas id="chart-1"></canvas></div>
+        <div class="wrapper col-2"><canvas id="chart-2"></canvas></div>
+        <div class="wrapper col-2"><canvas id="chart-3"></canvas></div>
+
+        <!-- <div class="toolbar">
+            <button onclick="toggleSmooth(this)">Smooth</button>
+            <button onclick="randomize(this)">Randomize</button>
+        </div> -->
+    </div>
+	<!-- <br>
+	<br>
+	<button id="randomizeData">Randomize Data</button>
+	<button id="addDataset">Add Dataset</button>
+	<button id="removeDataset">Remove Dataset</button>
+	<button id="addData">Add Data</button>
+	<button id="removeData">Remove Data</button> -->
+    <script src="chart-01.js"></script>
+    <script>
+        window.onload = function() {
+            
+        };
+        var ctx = document.getElementById('chart-0').getContext('2d');
+        window.myLine = new Chart(ctx, config);
+    </script>
+    <script src="chart-02.js"></script>
+    <script id="chart3script">
+        inputs = {
+            min: 850,
+            max: 3000,
+            count: 12,
+            decimals: 0,
+            continuity: 10
+        };
+        options = {
+			maintainAspectRatio: false,
+			spanGaps: false,
+			elements: {
+				line: {
+					tension: 0.000001
+				}
+			},
+			plugins: {
+				filler: {
+					propagate: false
+				}
+			},
+            scales: {
+                xAxes: [{
+                    ticks: {
+						autoSkip: false,
+						maxRotation: 0
+					},
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time Interval'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Response Time(in ms)'
+                    }
+                }]
+            }
+		};
+        var char3=new Chart('chart-2', {
+            type: 'line',
+            data: {
+                labels: generateLabels(),
+                datasets: [{
+                    backgroundColor: utils.transparentize(presets.red),
+                    borderColor: presets.red,
+                    data: generateData(),
+                    label: 'Today (*Live)',
+                    fill: 'start'
+                },{
+                    backgroundColor: utils.transparentize(presets.blue),
+                    borderColor: presets.blue,
+                    data: generateData(),
+                    label: 'Yesterday',
+                    fill: 'start'
+                }
+                ]
+            },
+            options: Chart.helpers.merge(options, {
+                title: {
+                    text: 'Digital Login Response Time',
+                    display: true
+                }
+            })
+        });
+    </script>
+    <script id="chart4script">
+        inputs = {
+            min: 10,
+            max: 75,
+            count: 12,
+            decimals: 0,
+            continuity: 1
+        };
+        options = {
+            maintainAspectRatio: false,
+            spanGaps: false,
+            elements: {
+                line: {
+                    tension: 0.000001
+                }
+            },
+            plugins: {
+                filler: {
+                    propagate: false
+                }
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 0
+                    },
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time Interval'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'No. Of Callers'
+                    }
+                }]
+            }
+        };
+        var activeData = [45, 62, 56, 35, 53, 76, 29, 48, 34, 71, 59, 63];
+        var abandoData = [2, 6, 5, 3, 4, 9, 2, 1, 0, 5, 1, 4];
+        var char3=new Chart('chart-3', {
+            type: 'line',
+            data: {
+                labels: generateLabels(),
+                datasets: [{
+                    backgroundColor: utils.transparentize(presets.orange),
+                    borderColor: presets.orange,
+                    data: activeData,
+                    label: 'Active Calls',
+                    fill: 'start'
+                },{
+                    backgroundColor: utils.transparentize(presets.green),
+                    borderColor: presets.green,
+                    data: abandoData,
+                    label: 'Abandoned'
+                    //,fill: 'end'
+                }
+                ]
+            },
+            options: Chart.helpers.merge(options, {
+                title: {
+                    text: 'Call Monitor - Active vs. Abandoned',
+                    display: true
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>
